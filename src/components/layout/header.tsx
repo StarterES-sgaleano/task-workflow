@@ -1,11 +1,10 @@
 import Link from "next/link"
-import { cookies } from "next/headers"
+import { type ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies"
 import { getUser, getUserProfile } from "@/lib/auth"
 import { UserNav } from "@/components/auth/user-nav"
 import { Button } from "@/components/ui/button"
 
-export async function Header() {
-  const cookieStore = cookies()
+export async function Header({ cookieStore }: { cookieStore: ReadonlyRequestCookies }) {
   const user = await getUser(cookieStore)
   const profile = user ? await getUserProfile(user.id, cookieStore) : null
 
