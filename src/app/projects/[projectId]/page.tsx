@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { requireAuth } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 import { CreateItemDialog } from "@/components/items/create-item-dialog";
 import { ItemList } from "@/components/items/item-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,7 +19,7 @@ interface ProjectPageProps {
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const user = await requireAuth();
-  const supabase = createClient();
+  const supabase = createClient(cookies());
 
   // Fetch project details
   const { data: project, error: projectError } = await supabase

@@ -2,11 +2,12 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 
 import { createClient } from '@/lib/supabase/server'
 
 export async function createItem(formData: FormData, projectId: string) {
-  const supabase = createClient()
+  const supabase = createClient(cookies())
 
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -42,7 +43,7 @@ export async function createItem(formData: FormData, projectId: string) {
 }
 
 export async function updateItem(formData: FormData, itemId: string, projectId: string) {
-  const supabase = createClient()
+  const supabase = createClient(cookies())
 
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -79,7 +80,7 @@ export async function updateItem(formData: FormData, itemId: string, projectId: 
 }
 
 export async function toggleItemStatus(itemId: string, projectId: string, currentStatus: 'open' | 'closed') {
-  const supabase = createClient()
+  const supabase = createClient(cookies())
 
   const { data: { user } } = await supabase.auth.getUser()
 

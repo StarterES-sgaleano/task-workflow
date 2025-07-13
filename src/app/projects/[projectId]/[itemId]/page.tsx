@@ -1,9 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 
 import { EditItemDialog } from "@/components/items/edit-item-dialog";
 
 export default async function ItemPage({ params }: { params: { itemId: string } }) {
-  const supabase = createClient();
+  const supabase = createClient(cookies());
   const { data: item } = await supabase
     .from("items")
     .select("*")

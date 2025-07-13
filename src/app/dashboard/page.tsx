@@ -1,5 +1,6 @@
 import { requireAuth } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 import { CreateProjectDialog } from "@/components/projects/create-project-dialog";
 import { CreateItemDialog } from "@/components/items/create-item-dialog";
 import { ProjectList } from "@/components/projects/project-list";
@@ -11,7 +12,7 @@ import Link from "next/link";
 
 export default async function DashboardPage() {
   const user = await requireAuth();
-  const supabase = createClient();
+  const supabase = createClient(cookies());
 
   // Fetch projects
   const { data: projects } = await supabase

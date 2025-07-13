@@ -1,16 +1,17 @@
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createBrowserClient } from '@/lib/supabase/client'
 import { type User } from '@supabase/supabase-js'
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 export async function getUser(): Promise<User | null> {
-  const supabase = createClient()
+  const supabase = createClient(cookies())
   const { data: { user } } = await supabase.auth.getUser()
   return user
 }
 
 export async function getUserProfile(userId: string) {
-  const supabase = createClient()
+  const supabase = createClient(cookies())
   
   // Use maybeSingle() to avoid errors when no profile exists
   const { data: profile, error } = await supabase
@@ -51,7 +52,7 @@ export async function requireAuth(): Promise<User> {
 }
 
 export async function createUserProfile(user: User) {
-  const supabase = createClient()
+  const supabase = createClient(cookies())
   
   // Check if profile already exists using maybeSingle to avoid errors
   const { data: existingProfile } = await supabase
