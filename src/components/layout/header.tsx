@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 export async function Header() {
   const cookieStore = cookies()
   const user = await getUser(cookieStore)
-  const profile = user ? await getUserProfile(user.id, cookieStore) : null</action>
+  const profile = user ? await getUserProfile(user.id, cookieStore) : null
 
   return (
     <header className="border-b">

@@ -11,8 +11,9 @@ import { Plus, FolderOpen, CheckSquare, FileText, ArrowRight } from "lucide-reac
 import Link from "next/link";
 
 export default async function DashboardPage() {
-  const user = await requireAuth();
-  const supabase = createClient(cookies());
+  const cookieStore = cookies();
+  const user = await requireAuth(cookieStore);
+  const supabase = createClient(cookieStore);
 
   // Fetch projects
   const { data: projects } = await supabase
