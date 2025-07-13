@@ -1,17 +1,17 @@
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createBrowserClient } from '@/lib/supabase/client'
 import { type User } from '@supabase/supabase-js'
-import { cookies } from 'next/headers'
+import { type ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies'
 import { redirect } from 'next/navigation'
 
-export async function getUser(): Promise<User | null> {
-  const supabase = createClient(cookies())
+export async function getUser(cookieStore: ReadonlyRequestCookies): Promise<User | null> {
+  const supabase = createClient(cookieStore)
   const { data: { user } } = await supabase.auth.getUser()
   return user
 }
 
-export async function getUserProfile(userId: string) {
-  const supabase = createClient(cookies())
+export async function getUserProfile(userId: string, cookieStore: ReadonlyRequestCookies) {
+  const supabase = createClient(cookieStore)
   
   // Use maybeSingle() to avoid errors when no profile exists
   const { data: profile, error } = await supabase
@@ -29,9 +29,9 @@ export async function getUserProfile(userId: string) {
   if (!profile) {
     console.log('No profile found for user, attempting to create one')
     try {
-      const { data: { user } } = await supabase.auth.getUser()
+      const user = await getUser(cookieStore)
       if (user && user.id === userId) {
-        const newProfile = await createUserProfile(user)
+        const newProfile = await createUserProfile(user, cookieStore)
         return newProfile
       }
     } catch (createError) {
@@ -43,16 +43,16 @@ export async function getUserProfile(userId: string) {
   return profile
 }
 
-export async function requireAuth(): Promise<User> {
-  const user = await getUser()
+export async function requireAuth(cookieStore: ReadonlyRequestCookies): Promise<User> {
+  const user = await getUser(cookieStore)
   if (!user) {
     redirect('/login')
   }
   return user
 }
 
-export async function createUserProfile(user: User) {
-  const supabase = createClient(cookies())
+export async function createUserProfile(user: User, cookieStore: ReadonlyRequestCookies) {
+  const supabase = createClient(cookieStore)
   
   // Check if profile already exists using maybeSingle to avoid errors
   const { data: existingProfile } = await supabase

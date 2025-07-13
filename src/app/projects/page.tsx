@@ -1,4 +1,5 @@
 import { requireAuth } from "@/lib/auth";
+import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { CreateProjectDialog } from "@/components/projects/create-project-dialog";
 import { ProjectList } from "@/components/projects/project-list";
@@ -8,8 +9,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FolderOpen, Archive, Plus } from "lucide-react";
 
 export default async function ProjectsPage() {
-  const user = await requireAuth();
-  const supabase = createClient();
+  const cookieStore = cookies();
+  const user = await requireAuth(cookieStore);
+  const supabase = createClient(cookieStore);</action>
 
   // Fetch active projects
   const { data: activeProjects } = await supabase

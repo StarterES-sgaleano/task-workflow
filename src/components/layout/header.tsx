@@ -1,11 +1,13 @@
 import Link from "next/link"
+import { cookies } from "next/headers"
 import { getUser, getUserProfile } from "@/lib/auth"
 import { UserNav } from "@/components/auth/user-nav"
 import { Button } from "@/components/ui/button"
 
 export async function Header() {
-  const user = await getUser()
-  const profile = user ? await getUserProfile(user.id) : null
+  const cookieStore = cookies()
+  const user = await getUser(cookieStore)
+  const profile = user ? await getUserProfile(user.id, cookieStore) : null</action>
 
   return (
     <header className="border-b">
